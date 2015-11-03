@@ -24,6 +24,21 @@ $app = new Laravel\Lumen\Application(
 
 // $app->withEloquent();
 
+// Load custom configurations
+$app->configure('lumenskel');
+//$app->configure('app');
+//$app->configure('app');
+//$app->configure('auth');
+//$app->configure('broadcasting');
+//$app->configure('cache');
+//$app->configure('database');
+//$app->configure('filesystem');
+//$app->configure('mail');
+//$app->configure('queue');
+//$app->configure('session');
+//$app->configure('view');
+
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
