@@ -2,4 +2,3 @@
 /storage/logs
 /storage/framework/cache
 .env
-.env.example
