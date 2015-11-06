@@ -1,0 +1,52 @@
+---
+- name: Set permissions on socket - owner
+  lineinfile: >
+    dest=/etc/php5/fpm/pool.d/www.conf
+    state=present
+    regexp='^;?listen.owner'
+    line='listen.owner = www-data'
+  notify: restart php5-fpm
+
+- name: Set permissions on socket - group
+  lineinfile: >
+    dest=/etc/php5/fpm/pool.d/www.conf
+    state=present
+    regexp='^;?listen.group'
+    line='listen.group = www-data'
+  notify: restart php5-fpm
+
+- name: Set permissions on socket - mode
+  lineinfile: >
+    dest=/etc/php5/fpm/pool.d/www.conf
+    state=present
+    regexp='^;?listen.mode'
+    line='listen.mode = 0660'
+  notify: restart php5-fpm
+
+- name: Ensure timezone is set in fpm php.ini
+  lineinfile: >
+    dest={{ php_ini.fpm }}
+    regexp='^;?date.timezone'
+    line='date.timezone = {{ base.timezone }}'
+  notify: restart php5-fpm
+
+- name: Disable fix_pathinfo for php .ini files
+  lineinfile: >
+    dest={{ php_ini.fpm }}
+    regexp='^;?cgi.fix_pathinfo'
+    line='cgi.fix_pathinfo=0'
+  notify: restart php5-fpm
+
+- name: Set max upload filesize
+  lineinfile: >
+    dest={{ php_ini.fpm }}
+    regexp='^;?upload_max_filesize'
+    line="upload_max_filesize = {{ php.max_file_upload }}"
+  notify: restart php5-fpm
+
+- name: Set max post size
+  lineinfile: >
+    dest={{ php_ini.fpm }}
+    regexp='^;?post_max_size'
+    line="post_max_size = {{ php.max_body_size }}"
+  notify: restart php5-fpm

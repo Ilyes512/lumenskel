@@ -1,0 +1,41 @@
+---
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Upgrade apt packages
+  sudo: yes
+  apt: upgrade=safe force=yes
+  when: apt.upgrade_packages == "safe"
+
+- name: Upgrade apt packages
+  sudo: yes
+  apt: upgrade=full force=yes
+  when: apt.upgrade_packages == "full"
+
+- name: Install System Packages
+  apt: pkg={{ item }} state=latest
+  with_items: apt.sys_packages
+
+- name: Configure the timezone
+  sudo: yes
+  template: src=timezone.tpl dest=/etc/timezone
+
+- name: More timezone configuration
+  sudo: yes
+  file: >
+    src=/usr/share/zoneinfo/{{ base.timezone }}
+    dest=/etc/localtime
+    state=link
+    force=yes
+    backup=yes
+
+- name: Set default system language pack
+  shell: locale-gen {{ base.locale }}
+  sudo: yes
+
+- name: Set VIM as default editor
+  command: update-alternatives --set editor /usr/bin/vim.basic
+
+- include: swap.yml
+  when: base.swap

@@ -1,0 +1,58 @@
+---
+- name: Add MariaDB-Repository
+  sudo: yes
+  apt_repository: repo='deb [arch=amd64,i386] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu {{ ansible_distribution_release }} main' state=present
+
+- name: Add Key for MariaDB Repository
+  sudo: yes
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xcbcb082a1bb943db
+
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: mariadb | Install MariaDB Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+
+- name: mariadb | Update root password for all root accounts
+  mysql_user: >
+    name=root
+    host={{ item }}
+    check_implicit_admin=yes
+    password={{ mariadb.root_password }}
+    login_user=root
+    login_password={{ mariadb.root_password }}
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: mariadb | Create databases
+  mysql_db: >
+    name={{ mariadb.database }}
+    state=present
+    login_user=root
+    login_password={{ mariadb.root_password }}
+
+- name: mariadb | Create users
+  mysql_user: >
+    name={{ mariadb.user }}
+    password={{ mariadb.password }}
+    priv=*.*:ALL
+    host=%
+    state=present
+    login_user=root 
+    login_password={{ mariadb.root_password }}
+
+- name: mariadb | Allow all remote connections
+  lineinfile: >
+    dest=/etc/mysql/my.cnf
+    state=present
+    regexp="^bind-address.*"
+    line='bind-address = 0.0.0.0'
+  notify: restart mariadb

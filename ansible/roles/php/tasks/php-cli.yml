@@ -1,0 +1,5 @@
+---
+- name: ensure timezone is set in cli php.ini
+  lineinfile: dest={{ php_ini.cli }}
+              regexp='^;?date.timezone'
+              line='date.timezone = {{ base.timezone }}'

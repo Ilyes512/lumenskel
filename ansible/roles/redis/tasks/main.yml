@@ -1,0 +1,13 @@
+---
+- name: Add Redis ppa Repository
+  sudo: yes
+  apt_repository: repo=ppa:rwky/redis
+
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Install php5
+  sudo: yes
+  apt: pkg=redis-server state=latest
+  notify: restart redis

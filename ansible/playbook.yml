@@ -1,0 +1,12 @@
+---
+- hosts: all
+  sudo: true
+  vars_files:
+    - vars/all.yml
+  roles:
+    - { role: base, tags: ['base'] }
+    - { role: nginx, tags: ['server'] }
+    - { role: php, tags: ['php`'] }
+    - { role: composer, tags: ['php'] }
+    - { role: mariadb, tags: ['db'] }
+    - { role: redis, tags: ['in-mem-store'] }

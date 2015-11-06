@@ -1,0 +1,18 @@
+---
+php_packages:
+  - php5-common
+  - php5-mcrypt
+  - php5-redis
+  - php5-mysql
+  - php5-pgsql
+  - php5-sqlite
+  - php5-curl
+  - php5-gd
+  - php5-gmp
+  - php5-memcached
+  - php5-imagick
+  - php5-json
+  - php5-intl
+php_ini:
+  fpm: /etc/php5/fpm/php.ini
+  cli: /etc/php5/cli/php.ini

@@ -1,0 +1,20 @@
+---
+apt:
+  upgrade_packages: safe
+  sys_packages:
+    - curl
+    - wget
+    - software-properties-common
+    - python-software-properties
+    - git
+    - vim
+    - language-pack-nl
+    #- tmux
+    #- unzip
+    #- nano
+    #- fail2ban
+    #- logrotate
+    #- acl
+swap:
+  file_path: /swapfile
+  file_size_mb: 1024
